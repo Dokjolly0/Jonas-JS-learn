@@ -5,3 +5,4 @@ console.log(document.querySelector('.message').textContent);
 
 console.log('Ciao');
 console.log('Ciao');
+console.log('Ciao');
