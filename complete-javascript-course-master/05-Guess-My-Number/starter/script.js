@@ -30,4 +30,5 @@ check.addEventListener('click', function () {
     punteggio++;
     document.querySelector('.score').textContent = punteggio;
   }
+  console.log('');
 });
