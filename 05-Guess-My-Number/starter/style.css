@@ -11,6 +11,10 @@ html {
   box-sizing: border-box;
 }
 
+/* h1 {
+  padding-bottom: 50px;
+} */
+
 body {
   font-family: 'Press Start 2P', sans-serif;
   color: #eee;
@@ -116,4 +120,10 @@ h1 {
 
 .label-score {
   margin-bottom: 2rem;
+}
+.bg_winner {
+  background: #60b347;
+}
+.bg_loser {
+  background: rgb(143, 8, 8);
 }
