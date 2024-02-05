@@ -121,3 +121,9 @@ h1 {
 .label-score {
   margin-bottom: 2rem;
 }
+.bg_winner {
+  background: #60b347;
+}
+.bg_loser {
+  background: rgb(143, 8, 8);
+}
