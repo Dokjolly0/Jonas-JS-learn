@@ -1,9 +1,10 @@
 'use strict';
 const check = document.querySelector('.check');
 let punteggio = 20;
-const secretNumber = Math.trunc(Math.random() * 20) + 1;
+let secretNumber = Math.trunc(Math.random() * 20) + 1;
+let highscore = 0;
 
-//document.querySelector('.number').textContent = secretNumber;
+document.querySelector('.number').textContent = secretNumber;
 //Perche si registri il valore nella variabile bisogna metterlo dentro la stessa funzione dove poi si usa quella variabile
 check.addEventListener('click', function () {
   const numeroSelezionato = Number(document.querySelector('.guess').value);
@@ -17,6 +18,10 @@ check.addEventListener('click', function () {
       document.querySelector('.number').style.width = '30rem';
       document.querySelector('.check').disabled = true;
       document.querySelector('.guess').disabled = true;
+      if (punteggio > highscore) {
+        document.querySelector('.highscore').textContent = punteggio;
+        highscore = punteggio;
+      }
     } else if (secretNumber > numeroSelezionato && numeroSelezionato !== 0) {
       document.querySelector('.message').textContent =
         '📉 Numero troppo basso!';
@@ -46,6 +51,7 @@ check.addEventListener('click', function () {
 });
 
 document.querySelector('.again').addEventListener('click', function () {
+  secretNumber = Math.trunc(Math.random() * 20) + 1;
   punteggio = 20;
   document.querySelector('.score').textContent = punteggio;
   document.querySelector('.message').textContent = 'Start guessing...';
