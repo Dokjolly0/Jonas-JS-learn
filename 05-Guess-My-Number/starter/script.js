@@ -3,8 +3,9 @@ const check = document.querySelector('.check');
 let punteggio = 20;
 let secretNumber = Math.trunc(Math.random() * 20) + 1;
 let highscore = 0;
+const listaNumeri = [];
 
-document.querySelector('.number').textContent = secretNumber;
+//document.querySelector('.number').textContent = secretNumber;
 //Perche si registri il valore nella variabile bisogna metterlo dentro la stessa funzione dove poi si usa quella variabile
 check.addEventListener('click', function () {
   const numeroSelezionato = Number(document.querySelector('.guess').value);
@@ -16,8 +17,7 @@ check.addEventListener('click', function () {
       document.querySelector('.number').textContent = secretNumber;
       //Questo è uno style inline applicato nel codice HTML
       document.querySelector('.number').style.width = '30rem';
-      document.querySelector('.check').disabled = true;
-      document.querySelector('.guess').disabled = true;
+      disabled();
       if (punteggio > highscore) {
         document.querySelector('.highscore').textContent = punteggio;
         highscore = punteggio;
@@ -25,10 +25,12 @@ check.addEventListener('click', function () {
     } else if (secretNumber > numeroSelezionato && numeroSelezionato !== 0) {
       document.querySelector('.message').textContent =
         '📉 Numero troppo basso!';
+      listaNumeri.push(numeroSelezionato);
       punteggio--;
       document.querySelector('.score').textContent = punteggio;
     } else if (secretNumber < numeroSelezionato && numeroSelezionato !== 0) {
       document.querySelector('.message').textContent = '📈 Numero troppo alto!';
+      listaNumeri.push(numeroSelezionato);
       punteggio--;
       document.querySelector('.score').textContent = punteggio;
     } else if (!numeroSelezionato) {
@@ -40,16 +42,26 @@ check.addEventListener('click', function () {
     document.querySelector('body').classList.add('bg_loser');
     punteggio--;
     document.querySelector('.score').textContent = punteggio;
-    document.querySelector('.check').disabled = true;
-    document.querySelector('.guess').disabled = true;
+    disabled();
   } else {
     document.querySelector('.message').textContent =
       "🧐 Numero indovinato all'ultimo!!!";
-    document.querySelector('.check').disabled = true;
-    document.querySelector('.guess').disabled = true;
+    disabled();
   }
-});
 
+  const numeroDaCercare = numeroSelezionato;
+  let numeriDoppi = listaNumeri.filter(function (numero) {
+    return numero === numeroDaCercare;
+  });
+  if (numeriDoppi.length > 1) {
+    // alert('Attenzione, hai gia usato questo numero!');
+    punteggio++;
+    document.querySelector('.score').textContent = punteggio;
+    listaNumeri.pop();
+    document.querySelector('.message').textContent = 'Numero gia inserito!';
+  }
+  console.log(listaNumeri);
+});
 document.querySelector('.again').addEventListener('click', function () {
   secretNumber = Math.trunc(Math.random() * 20) + 1;
   punteggio = 20;
@@ -63,3 +75,8 @@ document.querySelector('.again').addEventListener('click', function () {
   document.querySelector('.number').innerHTML = '?';
   document.querySelector('.guess').value = '';
 });
+
+function disabled() {
+  document.querySelector('.check').disabled = true;
+  document.querySelector('.guess').disabled = true;
+}
