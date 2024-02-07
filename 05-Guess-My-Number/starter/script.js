@@ -1,38 +1,46 @@
+//#region Inizializzazioni
 'use strict';
 const check = document.querySelector('.check');
 let punteggio = 20;
 let secretNumber = Math.trunc(Math.random() * 20) + 1;
 let highscore = 0;
-const listaNumeri = [];
+let listaNumeri = [];
+let selezionaMessaggi = document.querySelector('.message');
+let selezionaNumero = document.querySelector('.number');
+let seslezionaBody = document.querySelector('body');
+function disabled(bool) {
+  document.querySelector('.check').disabled = bool;
+  document.querySelector('.guess').disabled = bool;
+}
+//#endregion
 
 //#region Pulsante numeri
 check.addEventListener('click', function () {
   const numeroSelezionato = Number(document.querySelector('.guess').value);
   if (numeroSelezionato > 0 && numeroSelezionato <= 20) {
     if (secretNumber === numeroSelezionato) {
-      mostraMessaggi('🥳 Numero indovinato!!!');
-      document.querySelector('body').classList.add('bg_winner');
-      document.querySelector('.number').textContent = secretNumber;
-      document.querySelector('.number').style.width = '30rem';
+      selezionaMessaggi.textContent = '🥳 Numero indovinato!!!';
+      seslezionaBody.classList.add('bg_winner');
+      selezionaNumero.textContent = secretNumber;
+      selezionaNumero.style.width = '30rem';
       disabled(true);
       if (punteggio > highscore) {
         document.querySelector('.highscore').textContent = punteggio;
         highscore = punteggio;
       }
     } else if (secretNumber !== numeroSelezionato && numeroSelezionato !== 0) {
-      mostraMessaggi(
+      selezionaMessaggi.textContent =
         secretNumber > numeroSelezionato
           ? '📉 Numero troppo basso!'
-          : '📈 Numero troppo alto!'
-      );
+          : '📈 Numero troppo alto!';
       punteggio--;
       document.querySelector('.score').textContent = punteggio;
       listaNumeri.push(numeroSelezionato);
     }
   } else if (!numeroSelezionato) {
-    mostraMessaggi('⛔ Numero non valido!');
+    selezionaMessaggi.textContent = '⛔ Numero non valido!';
   } else if (punteggio === 1 && numeroSelezionato !== secretNumber) {
-    mostraMessaggi('💀 Hai perso!');
+    selezionaMessaggi.textContent = '💀 Hai perso!';
   }
   //#endregion
 
@@ -45,43 +53,23 @@ check.addEventListener('click', function () {
     punteggio++;
     document.querySelector('.score').textContent = punteggio;
     listaNumeri.pop();
-    mostraMessaggi('Numero gia inserito!');
+    selezionaMessaggi.textContent = 'Numero gia inserito!';
   }
 });
 //#endregion
 
 //#region Again
 document.querySelector('.again').addEventListener('click', function () {
-  Math.trunc(Math.random() * 20) + 1;
+  secretNumber = Math.trunc(Math.random() * 20) + 1;
   punteggio = 20;
   document.querySelector('.score').textContent = punteggio;
-  mostraMessaggi('Start guessing...');
+  selezionaMessaggi.textContent = 'Start guessing...';
   disabled(false);
-  document.querySelector('body').classList.remove('bg_loser');
-  document.querySelector('body').classList.remove('bg_winner');
-  document.querySelector('.number').style.width = '15rem';
-  document.querySelector('.number').innerHTML = '?';
+  seslezionaBody.classList.remove('bg_loser');
+  seslezionaBody.classList.remove('bg_winner');
+  selezionaNumero.style.width = '15rem';
+  selezionaNumero.textContent = '?';
   document.querySelector('.guess').value = '';
+  listaNumeri = [];
 });
-//#endregion
-
-//#region Funzioni
-function disabled(bool) {
-  if (bool === true) {
-    document.querySelector('.check').disabled = true;
-    document.querySelector('.guess').disabled = true;
-  } else if (bool === false) {
-    document.querySelector('.check').disabled = false;
-    document.querySelector('.guess').disabled = false;
-  }
-}
-function mostraMessaggi(messaggio) {
-  document.querySelector('.message').textContent = messaggio;
-}
-function mostraNumero(numero) {
-  document.querySelector('.numero').textContent = numero;
-}
-function numeroRandom20() {
-  secretNumber = Math.trunc(Math.random() * 20) + 1;
-}
 //#endregion
