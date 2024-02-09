@@ -17,6 +17,14 @@ for (let i = 0; i < showModal.length; i++) {
 //Qui non stiamo chiamando una funzione, quindi non serve mettere le parentesi tonde, anzi, se le metti il codice non funziona piu
 closeModal.addEventListener('click', togliPopup);
 overlay.addEventListener('click', togliPopup);
+document.addEventListener('keydown', function (tastoPremuto) {
+  console.log(tastoPremuto.key);
+  if (tastoPremuto.key === 'Escape' && !modal.classList.contains('hidden')) {
+    //Se l'elemento contiene la classe hidden torna true, altrimenti false
+    //In questo caso non lo conteneva, quindi torna false e noi nell'if gli abbiamo detto di eseguire l'azione solo se tornava false, quindi è tutto apposto
+    togliPopup();
+  }
+});
 
 //#region Funzioni
 function togliPopup() {
@@ -24,7 +32,7 @@ function togliPopup() {
   overlay.classList.add('hidden');
 }
 function mostraPopup(i) {
-  console.log(`Ciao, io solo la ${i + 1} finestra`);
+  // console.log(`Ciao, io solo la ${i + 1} finestra`);
   modal.classList.remove('hidden');
   overlay.classList.remove('hidden');
 }
