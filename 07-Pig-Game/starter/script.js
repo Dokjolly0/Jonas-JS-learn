@@ -1,228 +1,98 @@
-//#region Inizialise
-'use strict';
-const giocatoreAttivo = document.querySelector('.player--active');
-const giocatore1 = document.querySelector('.player--0');
-const giocatore2 = document.querySelector('.player--1');
-const dado = document.querySelector('.dice');
-const nuovoDado = document.querySelector('.btn--roll');
-const rigioca = document.querySelector('.btn--new');
-const aggiungiPunteggio = document.querySelector('.btn--hold');
-const punteggioRoundG1 = document.querySelector('#score--0');
-const punteggioRoundG2 = document.querySelector('#score--1');
-const punteggioComplessivoG1 = document.querySelector('#current--0');
-const punteggioComplessivoG2 = document.querySelector('#current--1');
-let numeroGiocatore = 1;
-let punteggioAttualeG1 = 0;
-let punteggioAttualeG2 = 0;
-let punteggioAttualeComplessivoG1 = 0;
-let punteggioAttualeComplessivoG2 = 0;
-let numeroDadoRandomico;
-//const dado = document.getElementsByClassName('dice')[0];
-//#endregion
+const new_btn = document.querySelector('.btn--new');
+const roll_btn = document.querySelector('.btn--roll');
+const hold_btn = document.querySelector('.btn--hold');
+const dadoEl = document.querySelector('.dice');
+const current_score_el_1 = document.getElementById('current--0');
+const current_score_el_2 = document.getElementById('current--1');
+const match_score_el_1 = document.getElementById('score--0');
+const match_score_el_2 = document.getElementById('score--1');
+const player1 = document.querySelector('.player--0');
+const player2 = document.querySelector('.player--1');
+let playerActive = 1;
+const currentScore = [0, 0];
+const matchScore = [0, 0];
 
-//#region Game logic
-dado.style.display = 'none';
+dadoEl.classList.add('hidden');
 
-nuovoDado.addEventListener('click', generaDado);
-aggiungiPunteggio.addEventListener('click', inserisciPunteggio);
-rigioca.addEventListener('click', reset);
-//#endregion
-
-//#region Funzioni
-//#region generaDado
-function generaDado() {
-  numeroDadoRandomico = Math.trunc(Math.random() * 6) + 1;
-  dado.src = `dice-${numeroDadoRandomico}.png`;
-  dado.style.display = 'block';
-  cheGiocatoreGioca();
-  if (numeroDadoRandomico === 1 && numeroGiocatore === 1) {
-    cambio_a_G1();
-  } else if (numeroDadoRandomico === 1 && numeroGiocatore === 2) {
-    cambio_a_G2();
+roll_btn.addEventListener('click', function () {
+  if (player1.classList.contains('player--active')) {
+    playerActive = 1;
+  } else if (player2.classList.contains('player--active')) {
+    playerActive = 2;
   }
-  if (
-    numeroDadoRandomico > 1 &&
-    numeroDadoRandomico <= 6 &&
-    numeroGiocatore === 1
-  ) {
-    //Giocatore 1
-    punteggioAttualeG1 = punteggioAttualeG1 + numeroDadoRandomico;
-    punteggioRoundG1.textContent = punteggioAttualeG1;
-  } else if (
-    numeroDadoRandomico > 1 &&
-    numeroDadoRandomico <= 6 &&
-    numeroGiocatore === 2
-  ) {
-    //Giocatore 2
-    punteggioAttualeG2 = punteggioAttualeG2 + numeroDadoRandomico;
-    punteggioRoundG2.textContent = punteggioAttualeG2;
-  }
-}
-//#endregion
-//#region inserisciPunteggio
-function inserisciPunteggio() {
-  if (numeroGiocatore === 1) {
-    punteggioAttualeComplessivoG1 += punteggioAttualeG1;
-    punteggioComplessivoG1.textContent = punteggioAttualeComplessivoG1;
-  } else if (numeroGiocatore === 2) {
-    punteggioAttualeComplessivoG2 += punteggioAttualeG2;
-    punteggioComplessivoG2.textContent = punteggioAttualeComplessivoG2;
-  }
-  if (punteggioAttualeComplessivoG1 >= 100) {
-    alert('Il giocatore 1 ha vinto🥳');
-  } else if (punteggioAttualeComplessivoG2 >= 100) {
-    alert('Il giocatore 2 ha vinto🥳');
+  let dado = Math.trunc(Math.random() * 6) + 1;
+  dadoEl.src = `dice-${dado}.png`;
+  dadoEl.classList.remove('hidden');
+  console.log(dado);
+  if (dado > 1) {
+    if (playerActive === 1) {
+      current_score_el_1.textContent = currentScore[0] += dado;
+    } else if (playerActive === 2) {
+      current_score_el_2.textContent = currentScore[1] += dado;
+    }
   } else {
-    if (numeroGiocatore === 1) {
-      cambio_a_G1();
-      dado.style.display = 'none';
-    } else if (numeroGiocatore === 2) {
-      cambio_a_G2();
-      dado.style.display = 'none';
+    //Cambio player
+    if (playerActive === 1) {
+      cambioPlayer();
+      currentScore[0] = 0;
+      current_score_el_1.textContent = 0;
+      //Con questa funzione aggiungi una classe che si aggiunge/togle dopo x millisecondi
+      setTimeout(function () {
+        dadoEl.classList.add('hidden');
+      }, 600);
+    } else if (playerActive === 2) {
+      cambioPlayer();
+      currentScore[1] = 0;
+      current_score_el_2.textContent = 0;
+      setTimeout(function () {
+        dadoEl.classList.add('hidden');
+      }, 600);
     }
   }
-}
-function reset() {
-  dado.style.display = 'none';
-  punteggioComplessivoG1.textContent = 0;
-  punteggioComplessivoG2.textContent = 0;
-  punteggioRoundG1.textContent = 0;
-  punteggioRoundG2.textContent = 0;
-  cambio_a_G2();
-}
-//#endregion
-//#region Che giocatore gioca
-function cheGiocatoreGioca() {
-  if (
-    giocatore1.classList.contains('player--active') &&
-    !giocatore2.classList.contains('player--active')
-  ) {
-    numeroGiocatore = 1;
-  } else if (
-    !giocatore1.classList.contains('player--active') &&
-    giocatore2.classList.contains('player--active')
-  ) {
-    numeroGiocatore = 2;
-  } else {
-    numeroGiocatore = 0;
-  }
-}
-//#endregion
-//#region Cambio player
-function cambio_a_G1() {
-  giocatore1.classList.remove('player--active');
-  giocatore2.classList.add('player--active');
-  punteggioRoundG1.textContent = 0;
-  punteggioAttualeG1 = 0;
-}
-function cambio_a_G2() {
-  giocatore2.classList.remove('player--active');
-  giocatore1.classList.add('player--active');
-  punteggioRoundG2.textContent = 0;
-  punteggioAttualeG2 = 0;
-}
-//#endregion
-//#endregion
+});
 
-/*
-//#region Funzioni
-//#region generaDado
-function generaDado() {
-  numeroDadoRandomico = Math.trunc(Math.random() * 6) + 1;
-  let punteggioDaAggiungere = 0;
-  dado.src = `dice-${numeroDadoRandomico}.png`;
-  dado.style.display = 'block';
-  //#region Logica giocatore attivo
-  if (
-    giocatore1.classList.contains('player--active') &&
-    !giocatore2.classList.contains('player--active')
-  ) {
-    numeroGiocatore = 1;
-  } else if (
-    !giocatore1.classList.contains('player--active') &&
-    giocatore2.classList.contains('player--active')
-  ) {
-    numeroGiocatore = 2;
-  } else {
-    numeroGiocatore = 0;
-  }
-  //#endregion
-
-  //#region Logica cambio player
-  if (numeroDadoRandomico === 1 && numeroGiocatore === 1) {
-    giocatore1.classList.remove('player--active');
-    giocatore2.classList.add('player--active');
-    punteggioAttualeG1 = 0;
-  } else if (numeroDadoRandomico === 1 && numeroGiocatore === 2) {
-    giocatore2.classList.remove('player--active');
-    giocatore1.classList.add('player--active');
-    punteggioAttualeG2 = 0;
-  }
-  //#endregion
-
-  //#region Logica punteggio
-  if (
-    numeroDadoRandomico > 1 &&
-    numeroDadoRandomico <= 6 &&
-    numeroGiocatore === 1
-  ) {
-    //Giocatore 1
-    punteggioAttualeG1 = punteggioAttualeG1 + numeroDadoRandomico;
-    punteggioRoundG1.textContent = punteggioAttualeG1;
-  } else if (
-    numeroDadoRandomico > 1 &&
-    numeroDadoRandomico <= 6 &&
-    numeroGiocatore === 2
-  ) {
-    //Giocatore 2
-    punteggioAttualeG2 = punteggioAttualeG2 + numeroDadoRandomico;
-    punteggioRoundG2.textContent = punteggioAttualeG2;
-  }
-  //#endregion
-}
-//#endregion
-//#region inserisciPunteggio
-function inserisciPunteggio() {
-  if (numeroGiocatore === 1) {
-    punteggioAttualeComplessivoG1 += punteggioAttualeG1;
-    punteggioComplessivoG1.textContent = punteggioAttualeComplessivoG1;
-    punteggioAttualeG1.textContent = 0;
-    giocatore1.classList.remove('player--active');
-    giocatore2.classList.add('player--active');
-    punteggioRoundG1.textContent = 0;
-  } else if (numeroGiocatore === 2) {
-    punteggioAttualeComplessivoG2 += punteggioAttualeG2;
-    punteggioComplessivoG2.textContent = punteggioAttualeComplessivoG2;
-    punteggioAttualeG2 = 0;
-    giocatore1.classList.add('player--active');
-    giocatore2.classList.remove('player--active');
-    punteggioRoundG2 = 0;
-  }
-  if (
-    giocatore1.classList.contains('player--active') &&
-    !giocatore2.classList.contains('player--active')
-  ) {
-    if (punteggioAttualeComplessivoG1 >= 100) {
-      alert('Hai vinto!!!');
+hold_btn.addEventListener('click', function () {
+  if (playerActive === 1) {
+    match_score_el_1.textContent = matchScore[0] += currentScore[0];
+    if (matchScore[0] >= 100) {
+      alert('Giocatore 1, hai vinto🥳');
     } else {
-      giocatore1.classList.remove('player--active');
-      giocatore2.classList.add('player--active');
+      currentScore[0] = 0;
+      current_score_el_1.textContent = 0;
+      cambioPlayer();
     }
-  } else if (
-    !giocatore1.classList.contains('player--active') &&
-    giocatore2.classList.contains('player--active')
-  ) {
-    if (punteggioAttualeComplessivoG2 >= 100) {
-      alert('Hai vinto!!!');
+  } else if (playerActive === 2) {
+    match_score_el_2.textContent = matchScore[1] += currentScore[1];
+    if (matchScore[1] >= 100) {
+      alert('Giocatore 2, hai vinto🥳');
     } else {
-      giocatore1.classList.add('player--active');
-      giocatore2.classList.remove('player--active');
+      currentScore[1] = 0;
+      current_score_el_2.textContent = 0;
+      cambioPlayer();
     }
   }
-  dado.style.display = 'none';
-  punteggioRoundG1.textContent = 0;
-  punteggioRoundG2.textContent = 0;
+  dadoEl.classList.add('hidden');
+});
+
+new_btn.addEventListener('click', function () {
+  match_score_el_1.textContent = 0;
+  match_score_el_2.textContent = 0;
+  current_score_el_1.textContent = 0;
+  current_score_el_2.textContent = 0;
+  player1.classList.add('player--active');
+  player2.classList.remove('player--active');
+  matchScore[0] = 0;
+  matchScore[1] = 0;
+  currentScore[0] = 0;
+  currentScore[1] = 0;
+});
+
+function cambioPlayer() {
+  if (player1.classList.contains('player--active')) {
+    player1.classList.remove('player--active');
+    player2.classList.add('player--active');
+  } else if (player2.classList.contains('player--active')) {
+    player2.classList.remove('player--active');
+    player1.classList.add('player--active');
+  }
 }
-//#endregion
-//#endregion
-*/
