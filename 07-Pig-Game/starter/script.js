@@ -25,8 +25,106 @@ dado.style.display = 'none';
 
 nuovoDado.addEventListener('click', generaDado);
 aggiungiPunteggio.addEventListener('click', inserisciPunteggio);
+rigioca.addEventListener('click', reset);
 //#endregion
 
+//#region Funzioni
+//#region generaDado
+function generaDado() {
+  numeroDadoRandomico = Math.trunc(Math.random() * 6) + 1;
+  dado.src = `dice-${numeroDadoRandomico}.png`;
+  dado.style.display = 'block';
+  cheGiocatoreGioca();
+  if (numeroDadoRandomico === 1 && numeroGiocatore === 1) {
+    cambio_a_G1();
+  } else if (numeroDadoRandomico === 1 && numeroGiocatore === 2) {
+    cambio_a_G2();
+  }
+  if (
+    numeroDadoRandomico > 1 &&
+    numeroDadoRandomico <= 6 &&
+    numeroGiocatore === 1
+  ) {
+    //Giocatore 1
+    punteggioAttualeG1 = punteggioAttualeG1 + numeroDadoRandomico;
+    punteggioRoundG1.textContent = punteggioAttualeG1;
+  } else if (
+    numeroDadoRandomico > 1 &&
+    numeroDadoRandomico <= 6 &&
+    numeroGiocatore === 2
+  ) {
+    //Giocatore 2
+    punteggioAttualeG2 = punteggioAttualeG2 + numeroDadoRandomico;
+    punteggioRoundG2.textContent = punteggioAttualeG2;
+  }
+}
+//#endregion
+//#region inserisciPunteggio
+function inserisciPunteggio() {
+  if (numeroGiocatore === 1) {
+    punteggioAttualeComplessivoG1 += punteggioAttualeG1;
+    punteggioComplessivoG1.textContent = punteggioAttualeComplessivoG1;
+  } else if (numeroGiocatore === 2) {
+    punteggioAttualeComplessivoG2 += punteggioAttualeG2;
+    punteggioComplessivoG2.textContent = punteggioAttualeComplessivoG2;
+  }
+  if (punteggioAttualeComplessivoG1 >= 100) {
+    alert('Il giocatore 1 ha vinto🥳');
+  } else if (punteggioAttualeComplessivoG2 >= 100) {
+    alert('Il giocatore 2 ha vinto🥳');
+  } else {
+    if (numeroGiocatore === 1) {
+      cambio_a_G1();
+      dado.style.display = 'none';
+    } else if (numeroGiocatore === 2) {
+      cambio_a_G2();
+      dado.style.display = 'none';
+    }
+  }
+}
+function reset() {
+  dado.style.display = 'none';
+  punteggioComplessivoG1.textContent = 0;
+  punteggioComplessivoG2.textContent = 0;
+  punteggioRoundG1.textContent = 0;
+  punteggioRoundG2.textContent = 0;
+  cambio_a_G2();
+}
+//#endregion
+//#region Che giocatore gioca
+function cheGiocatoreGioca() {
+  if (
+    giocatore1.classList.contains('player--active') &&
+    !giocatore2.classList.contains('player--active')
+  ) {
+    numeroGiocatore = 1;
+  } else if (
+    !giocatore1.classList.contains('player--active') &&
+    giocatore2.classList.contains('player--active')
+  ) {
+    numeroGiocatore = 2;
+  } else {
+    numeroGiocatore = 0;
+  }
+}
+//#endregion
+//#region Cambio player
+function cambio_a_G1() {
+  giocatore1.classList.remove('player--active');
+  giocatore2.classList.add('player--active');
+  punteggioRoundG1.textContent = 0;
+  punteggioAttualeG1 = 0;
+}
+function cambio_a_G2() {
+  giocatore2.classList.remove('player--active');
+  giocatore1.classList.add('player--active');
+  punteggioRoundG2.textContent = 0;
+  punteggioAttualeG2 = 0;
+}
+//#endregion
+//#endregion
+
+/*
 //#region Funzioni
 //#region generaDado
 function generaDado() {
@@ -88,11 +186,17 @@ function inserisciPunteggio() {
   if (numeroGiocatore === 1) {
     punteggioAttualeComplessivoG1 += punteggioAttualeG1;
     punteggioComplessivoG1.textContent = punteggioAttualeComplessivoG1;
-    punteggioAttualeG1 = 0;
+    punteggioAttualeG1.textContent = 0;
+    giocatore1.classList.remove('player--active');
+    giocatore2.classList.add('player--active');
+    punteggioRoundG1.textContent = 0;
   } else if (numeroGiocatore === 2) {
     punteggioAttualeComplessivoG2 += punteggioAttualeG2;
     punteggioComplessivoG2.textContent = punteggioAttualeComplessivoG2;
     punteggioAttualeG2 = 0;
+    giocatore1.classList.add('player--active');
+    giocatore2.classList.remove('player--active');
+    punteggioRoundG2 = 0;
   }
   if (
     giocatore1.classList.contains('player--active') &&
@@ -121,3 +225,4 @@ function inserisciPunteggio() {
 }
 //#endregion
 //#endregion
+*/
