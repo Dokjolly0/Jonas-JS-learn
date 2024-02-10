@@ -56,6 +56,9 @@ hold_btn.addEventListener('click', function () {
     match_score_el_1.textContent = matchScore[0] += currentScore[0];
     if (matchScore[0] >= 100) {
       alert('Giocatore 1, hai vinto🥳');
+      player1.classList.add('player--winner');
+      hold_btn.disabled = true;
+      roll_btn.disabled = true;
     } else {
       currentScore[0] = 0;
       current_score_el_1.textContent = 0;
@@ -65,6 +68,9 @@ hold_btn.addEventListener('click', function () {
     match_score_el_2.textContent = matchScore[1] += currentScore[1];
     if (matchScore[1] >= 100) {
       alert('Giocatore 2, hai vinto🥳');
+      player2.classList.add('player--winner');
+      hold_btn.disabled = true;
+      roll_btn.disabled = true;
     } else {
       currentScore[1] = 0;
       current_score_el_2.textContent = 0;
@@ -85,6 +91,10 @@ new_btn.addEventListener('click', function () {
   matchScore[1] = 0;
   currentScore[0] = 0;
   currentScore[1] = 0;
+  player1.classList.remove('player--winner');
+  player2.classList.remove('player--winner');
+  hold_btn.disabled = false;
+  roll_btn.disabled = false;
 });
 
 function cambioPlayer() {
