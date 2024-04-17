@@ -334,8 +334,7 @@ let lunghezza_massima = 0;
 document.querySelector('button').addEventListener('click', function(){
   const text = textarea.value;
   textarea.value = "";
-  let text_format = text.split(' ').join('\n');
-  text_format = text_format.split('\n');
+  let text_format = text.split(' ').join('\n').split('\n');
   for(let j = 0; j < text_format.length; j++) if(text_format[j].length > lunghezza_massima) lunghezza_massima = text_format[j].length;
   for(let i = 0; i < text_format.length; i++){
     text_format[i] = text_format[i].trim();
@@ -354,9 +353,3 @@ document.querySelector('button').addEventListener('click', function(){
     textarea.value += `${parola_finita}${spaziBianchi}\t${simbolo}\n`;
   }
 })
-
-
-
-
-
-
